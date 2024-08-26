@@ -1,11 +1,12 @@
 import env from '#start/env'
 import { defineConfig } from '@adonisjs/lucid'
+import app from "@adonisjs/core/services/app";
 
 const dbConfig = defineConfig({
-  connection: 'postgres',
+  connection: env.get('NODE_ENV') === 'development' ? 'sqlite' : 'mysql',
   connections: {
-    postgres: {
-      client: 'pg',
+    mysql: {
+      client: 'mysql2',
       connection: {
         host: env.get('DB_HOST'),
         port: env.get('DB_PORT'),
@@ -13,11 +14,23 @@ const dbConfig = defineConfig({
         password: env.get('DB_PASSWORD'),
         database: env.get('DB_DATABASE'),
       },
+      useNullAsDefault: true,
       migrations: {
         naturalSort: true,
         paths: ['database/migrations'],
       },
     },
+    sqlite: {
+      client: 'sqlite',
+      connection: {
+        filename: app.tmpPath('db.sqlite3')
+      },
+      useNullAsDefault: true,
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      }
+    }
   },
 })
 

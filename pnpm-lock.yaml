@@ -23,6 +23,9 @@ importers:
       '@adonisjs/lucid':
         specifier: ^21.1.1
         version: 21.2.0(@adonisjs/assembler@7.7.0(typescript@5.5.4))(@adonisjs/core@6.12.1(@adonisjs/assembler@7.7.0(typescript@5.5.4))(@vinejs/vine@2.1.0))(better-sqlite3@11.2.1)(luxon@3.5.0)(mysql2@3.11.0)
+      '@paralleldrive/cuid2':
+        specifier: ^2.2.2
+        version: 2.2.2
       '@vinejs/vine':
         specifier: ^2.1.0
         version: 2.1.0
