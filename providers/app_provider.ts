@@ -1,10 +1,10 @@
 import type { ApplicationService } from '@adonisjs/core/types'
-import Docker from "#services/docker";
-import ServerService from "#services/server_service";
+import Docker from '#services/docker'
+import ServerService from '#services/server_service'
 
 declare module '@adonisjs/core/types' {
   export interface ContainerBindings {
-    'docker': Docker
+    docker: Docker
   }
 }
 
@@ -15,6 +15,8 @@ export default class AppProvider {
    * Register bindings to the container
    */
   register() {
+    if (this.app.getEnvironment() !== 'web') return
+
     this.app.container.singleton(Docker, async (resolver) => {
       const serverService = await resolver.make(ServerService)
       return new Docker(serverService)
@@ -31,6 +33,8 @@ export default class AppProvider {
    * The application has been booted
    */
   async start() {
+    if (this.app.getEnvironment() !== 'web') return
+
     const docker = await this.app.container.make('docker')
     await docker.init()
   }
