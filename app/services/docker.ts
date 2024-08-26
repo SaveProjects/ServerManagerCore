@@ -15,19 +15,15 @@ export default class Docker {
 
   constructor(protected serverService: ServerService) {
     this.#log = logger.child({ service: 'Docker' })
-
-    this.#log.info('Docker service initialisation...')
-    this.#init().then(() => {
-      this.#log.info('Docker service initialisation... OK')
-    })
   }
 
-  async #init() {
+  async init() {
+    this.#log.info('Docker service initialisation...')
     const privateKey = await readFile(app.makePath('keys', 'docker_private.pem'))
 
     const modem = new DockerModem({
       host: env.get('DOCKER_HOST'),
-      username: 'docker',
+      username: 'debian',
       sshOptions: {
         privateKey: privateKey.toString(),
       },
@@ -37,6 +33,8 @@ export default class Docker {
     this.#client = new Dockerode(({ modem }['modem'] = modem))
     await this.#fetchNetwork()
     await this.sync()
+
+    this.#log.info('Docker service initialisation... OK')
   }
 
   async #fetchNetwork() {
@@ -45,8 +43,7 @@ export default class Docker {
 
     if (!network) {
       this.#log.error("ServerManager network doesn't exist, core is unable to start any server!")
-      await app.terminate()
-      return
+      process.exit(8001)
     }
 
     //this.#network = this.#client?.getNetwork(network.Id)!
