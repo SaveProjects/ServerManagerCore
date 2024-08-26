@@ -12,6 +12,9 @@ export default class Type extends BaseModel {
   @column()
   declare dockerImage: string
 
+  @column()
+  declare externalImage: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
