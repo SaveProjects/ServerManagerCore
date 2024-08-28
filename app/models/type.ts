@@ -12,7 +12,7 @@ export default class Type extends BaseModel {
   @column()
   declare dockerImage: string
 
-  @column()
+  @column({ serialize: (value) => !!value })
   declare externalImage: boolean
 
   @column.dateTime({ autoCreate: true })
